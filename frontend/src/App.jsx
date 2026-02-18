@@ -1078,11 +1078,8 @@ const UploadPage = () => {
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Use basename for /surovidash deployment
-  const basename = import.meta.env.BASE_URL || '/';
-
   return (
-    <Router basename={basename}>
+    <Router basename="/surovidash">
       <div className="min-h-screen bg-gray-100">
         <Navigation isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
         
