@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+// Auto-detect API URL based on environment
+const API_BASE_URL = import.meta.env.PROD 
+  ? '/surovidash/api' 
+  : 'http://localhost:8000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
