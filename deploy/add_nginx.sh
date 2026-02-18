@@ -1,8 +1,13 @@
-# Nginx configuration for SUROVI Dashboard
-# ADD these location blocks to the existing HTTPS server block in /etc/nginx/sites-available/default
-# Inside the "server { server_name agro.surovi.net; listen 443 ssl; ... }" block
+#!/bin/bash
+# Run this script on the server to add surovidash to nginx
 
-# ========== SUROVIDASH LOCATIONS - ADD BEFORE THE CLOSING } OF THE HTTPS SERVER BLOCK ==========
+# Add surovidash server block to nginx config
+sudo tee -a /etc/nginx/sites-available/default << 'NGINX_EOF'
+
+# ========== SUROVIDASH - Added by deployment script ==========
+server {
+    listen 80;
+    server_name erp.surovi.net agro.surovi.net;
 
     # SUROVI Dashboard - Frontend static files
     location /surovidash {
@@ -15,16 +20,16 @@
         rewrite ^/surovidash/api(.*)$ /api$1 break;
         proxy_pass http://127.0.0.1:8000;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
         proxy_read_timeout 300;
-        proxy_connect_timeout 300;
-        proxy_send_timeout 300;
     }
+}
+# ========== END SUROVIDASH ==========
+NGINX_EOF
 
-# ========== END SUROVIDASH LOCATIONS ==========
+# Test and reload nginx
+sudo nginx -t && sudo systemctl reload nginx
+echo "Nginx configured for surovidash"
