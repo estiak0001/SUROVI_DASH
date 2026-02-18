@@ -1,0 +1,15 @@
+[Unit]
+Description=SUROVI Dashboard Backend API
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=estiak
+WorkingDirectory=/home/estiak/SUROVI_DASH/backend
+Environment="PATH=/home/estiak/SUROVI_DASH/backend/venv/bin"
+ExecStart=/home/estiak/SUROVI_DASH/backend/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
