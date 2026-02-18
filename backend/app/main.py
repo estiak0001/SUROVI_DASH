@@ -18,8 +18,6 @@ app = FastAPI(
 
 # Serve frontend static files (production)
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend", "dist")
-if os.path.exists(FRONTEND_DIR):
-    app.mount("/surovidash/assets", StaticFiles(directory=os.path.join(FRONTEND_DIR, "assets")), name="assets")
 
 # CORS middleware
 app.add_middleware(
@@ -30,13 +28,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers under /surovidash/api
+# Include routers under /surovidash/api - MUST be before catch-all routes
 app.include_router(api.router, prefix="/surovidash/api", tags=["API"])
 
 
 @app.get("/")
 def root():
     return RedirectResponse(url="/surovidash")
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
+
+# Mount static assets AFTER API routes
+if os.path.exists(FRONTEND_DIR) and os.path.exists(os.path.join(FRONTEND_DIR, "assets")):
+    app.mount("/surovidash/assets", StaticFiles(directory=os.path.join(FRONTEND_DIR, "assets")), name="assets")
 
 
 @app.get("/surovidash")
@@ -47,14 +55,12 @@ def surovidash_root():
     return {"message": "Surovi Dashboard", "docs": "/docs"}
 
 
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
-
-
-# Serve frontend for all /surovidash/* routes (SPA support)
+# Serve frontend for all /surovidash/* routes (SPA support) - MUST be LAST
 @app.get("/surovidash/{full_path:path}")
 def serve_frontend(full_path: str):
+    # Skip if it looks like an API call
+    if full_path.startswith("api/"):
+        return {"error": "Not found"}
     if os.path.exists(FRONTEND_DIR):
         file_path = os.path.join(FRONTEND_DIR, full_path)
         if os.path.isfile(file_path):
