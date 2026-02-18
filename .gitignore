@@ -1,0 +1,20 @@
+# Frontend
+frontend/node_modules/
+
+# Backend
+backend/venv/
+backend/__pycache__/
+backend/app/__pycache__/
+backend/app/routers/__pycache__/
+backend/app/services/__pycache__/
+backend/*.db
+backend/.env
+
+# Data files
+*.xlsx
+*.csv
+
+# Other
+__pycache__/
+*.pyc
+.env
