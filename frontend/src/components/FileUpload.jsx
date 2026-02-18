@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Upload, FileSpreadsheet, CheckCircle, XCircle, Loader, Calendar, Info, AlertTriangle, RefreshCw, Download } from 'lucide-react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = '/surovidash/api';
 
 const MONTHS = [
   { value: 1, label: 'January' },
