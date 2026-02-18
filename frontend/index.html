@@ -54,18 +54,5 @@
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>
-      // Hide loading screen when React app mounts
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          var loadingScreen = document.getElementById('loading-screen');
-          if (loadingScreen) {
-            loadingScreen.style.opacity = '0';
-            loadingScreen.style.transition = 'opacity 0.3s';
-            setTimeout(function() { loadingScreen.remove(); }, 300);
-          }
-        }, 100);
-      });
-    </script>
   </body>
 </html>
